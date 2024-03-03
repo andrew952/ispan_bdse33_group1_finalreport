@@ -24,6 +24,9 @@ target_folder = f"./notnone"
 if not os.path.exists(target_folder):
     os.makedirs(target_folder)
 
+"""
+分割縣市、地區及每日營業時間
+"""
 for file_name in rawdata_files:
     try:
         with open(
@@ -219,8 +222,9 @@ for city_name in city_list:
         file_name_output = os.path.join(target_folder, f"{city_name}.json")
         with open(file_name_output, "w", encoding="utf-8") as output_file:
             json.dump(result_list, output_file, indent=2, ensure_ascii=False)
-
-# 檢查重複的景點
+"""
+檢查重複的景點
+"""
 all_attractions = []
 visited_attractions = []
 recurring_set = []
@@ -270,8 +274,11 @@ if len(all_attractions) != 0:
     with open(file_name_output, "w", encoding="utf-8") as output_file:
         json.dump(all_attractions, output_file, indent=2, ensure_ascii=False)
 
+"""
+校正地址資料
+"""
 
-# 校正地址資料
+
 def get_address(url):
     """從網址中獲取地址"""
     ua = UserAgent()

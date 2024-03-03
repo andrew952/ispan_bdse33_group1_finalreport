@@ -27,9 +27,9 @@ driver = webdriver.Chrome(
 )
 
 
-# wheredata = input('你存放之前爬下來資料的資料夾絕對位置：')
+# 你存放之前爬下來資料的資料夾位置
 wheredata = "./your_folder"
-# put_comment_data = input('你放要放評論的資料夾絕對位置：')
+# 你放要放評論的資料夾位置
 put_comment_data = "./output_folder"
 path = r"{}".format(wheredata)
 
@@ -57,6 +57,7 @@ for file in files:
         for item in data:
             href = item["Google評論網址"]
             name = item["景點名稱"]
+            # 檢查是否爬過
             if name in put_comment_data_file_names_str:
                 continue
             driver.get(href)

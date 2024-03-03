@@ -51,31 +51,32 @@ def tokenize(comment):
     return " ".join(w for w in words if w not in stop_words_list)
 
 
-data = get_rawdata()
+if __name__ == "__main__":
 
-# 取出評論資料
-comments = [d["評論"] for d in data]
+    data = get_rawdata()
 
+    # 取出評論資料
+    comments = [d["評論"] for d in data]
 
-tokenized_comments = [tokenize(comment) for comment in comments]
+    tokenized_comments = [tokenize(comment) for comment in comments]
 
-# Doc2Vec轉向量
-documents = [
-    TaggedDocument(doc.split(), [i]) for i, doc in enumerate(tokenized_comments)
-]
-model = Doc2Vec(documents, vector_size=100, window=2, min_count=1, workers=4)
+    # Doc2Vec轉向量
+    documents = [
+        TaggedDocument(doc.split(), [i]) for i, doc in enumerate(tokenized_comments)
+    ]
+    model = Doc2Vec(documents, vector_size=100, window=2, min_count=1, workers=4)
 
-vectors = [model.infer_vector(doc.words) for doc in documents]
+    vectors = [model.infer_vector(doc.words) for doc in documents]
 
-# k-means聚類
-k = 12
-kmeans = KMeans(n_clusters=k, random_state=42)
-clusters = kmeans.fit_predict(vectors)
+    # k-means聚類
+    k = 12
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    clusters = kmeans.fit_predict(vectors)
 
-# 將聚類結果新增到資料中
-for i, d in enumerate(data):
-    d["組別"] = str(clusters[i])
+    # 將聚類結果新增到資料中
+    for i, d in enumerate(data):
+        d["組別"] = str(clusters[i])
 
-# 存成.json檔案
-with open("test_kmeans.json", "w", encoding="utf-8") as f:
-    json.dump(data, f, ensure_ascii=False, indent=4)
+    # 存成.json檔案
+    with open("test_kmeans.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
