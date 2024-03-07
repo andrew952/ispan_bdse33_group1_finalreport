@@ -11,6 +11,8 @@ from selenium.webdriver.common.keys import Keys
 
 
 def initialize_browser():
+    """初始化並返回一個Chrome瀏覽器物件。"""
+
     ua = UserAgent()
     user_agent = ua.random
 
@@ -28,7 +30,17 @@ def initialize_browser():
     return driver
 
 
-def google_search(keyword):
+def google_search(keyword: str):
+    """
+    透過Google搜尋關鍵字，並返回相關的網址列表。
+
+    Parameters:
+    keyword (str): 要搜尋的關鍵字。
+
+    Returns:
+    list: 包含相關網址的列表。
+    """
+
     keyword = f"{keyword}site:www.kkday.com"
     driver = initialize_browser()
     driver.get("https://www.google.com/")
@@ -45,8 +57,17 @@ def google_search(keyword):
     return url_list
 
 
-def get_data(url):
-    """从网址中获取地址"""
+def get_data(url: str):
+    """
+    從指定的網址中獲取資料。
+
+    Parameters:
+    url (str): 要抓取資料的網址。
+
+    Returns:
+    list: 包含所獲得資料的列表。
+    """
+
     ua = UserAgent()
     my_header = {
         "User-Agent": ua.random,
@@ -102,7 +123,17 @@ def get_data(url):
     return datas
 
 
-def get_klook_data(keyword):
+def get_klook_data(keyword: str):
+    """
+    從Klook網站中獲取特定關鍵字的資料。
+
+    Parameters:
+    keyword (str): 要搜尋的關鍵字。
+
+    Returns:
+    list: 包含所獲得資料的列表。
+    """
+
     keyword_google_search = f"{keyword}  site:www.klook.com"
     return_list = [get_data(url) for url in google_search(keyword_google_search)]
 
