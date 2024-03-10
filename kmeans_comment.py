@@ -7,8 +7,8 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-def get_rawdata():
-    folder_path = "./test"
+def get_rawdata(folder_path):
+
     result_list = []
     rawdata_file_names = [f for f in os.listdir(folder_path) if f.endswith(".json")]
 
@@ -29,9 +29,7 @@ def get_rawdata():
     return result_list
 
 
-def stop_words():
-    # 停用字文档的路径
-    stopword_file_path = "./stopwords.txt"
+def stop_words(stopword_file_path="./stopwords.txt"):
 
     # 定义一个空列表用于存储停用词
     stop_words = []
@@ -51,9 +49,9 @@ def tokenize(comment):
     return " ".join(w for w in words if w not in stop_words_list)
 
 
-if __name__ == "__main__":
+def kmeans_comment(folder_path="./test"):
 
-    data = get_rawdata()
+    data = get_rawdata(folder_path)
 
     # 取出評論資料
     comments = [d["評論"] for d in data]

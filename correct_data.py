@@ -6,31 +6,31 @@ import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
-
 city_list = [
-        "臺北市",
-        "新北市",
-        "桃園市",
-        "臺中市",
-        "臺南市",
-        "高雄市",
-        "基隆市",
-        "新竹市",
-        "嘉義市",
-        "新竹縣",
-        "苗栗縣",
-        "彰化縣",
-        "南投縣",
-        "雲林縣",
-        "嘉義縣",
-        "屏東縣",
-        "宜蘭縣",
-        "花蓮縣",
-        "臺東縣",
-        "澎湖縣",
-        "金門縣",
-        "連江縣",
-    ]
+    "臺北市",
+    "新北市",
+    "桃園市",
+    "臺中市",
+    "臺南市",
+    "高雄市",
+    "基隆市",
+    "新竹市",
+    "嘉義市",
+    "新竹縣",
+    "苗栗縣",
+    "彰化縣",
+    "南投縣",
+    "雲林縣",
+    "嘉義縣",
+    "屏東縣",
+    "宜蘭縣",
+    "花蓮縣",
+    "臺東縣",
+    "澎湖縣",
+    "金門縣",
+    "連江縣",
+]
+
 
 # 檢查是否應該移除景點
 def should_remove_attraction(attraction):
@@ -148,8 +148,8 @@ def splited_colum_data(filtered_data):
     return result_list
 
 
-def splited_data(rawdata_folder = "./rawdata" , target_folder = "./splited"):
-    
+def splited_data(rawdata_folder="./rawdata", target_folder="./splited"):
+
     rawdata_files = [f for f in os.listdir(rawdata_folder) if f.endswith(".json")]
 
     """
@@ -166,10 +166,11 @@ def splited_data(rawdata_folder = "./rawdata" , target_folder = "./splited"):
             continue
 
         filtered_data = [
-            attraction for attraction in data if not should_remove_attraction(attraction)
+            attraction
+            for attraction in data
+            if not should_remove_attraction(attraction)
         ]
 
-        
         if not os.path.exists(target_folder):
             os.makedirs(target_folder)
 
@@ -183,7 +184,7 @@ def splited_data(rawdata_folder = "./rawdata" , target_folder = "./splited"):
             json.dump(result_list, output_file, indent=2, ensure_ascii=False)
 
 
-def chk_repeat(city_name , file_names):
+def chk_repeat(city_name, file_names):
     filtered_attractions = []
     visited_attractions = []
     result_list = []
@@ -203,7 +204,7 @@ def chk_repeat(city_name , file_names):
     for data in filtered_attractions:
         attraction_name = data.get("景點名稱", "")
         address_city = data.get("地址", "")
-        
+
         if "臺" in city_name:
             city_name = f"台{city_name[1]}"
         if city_name in address_city:
@@ -216,10 +217,8 @@ def chk_repeat(city_name , file_names):
 
 def merged_city():
     # 合併特定城市的景點資料
-    
 
     for city_name in city_list:
-        
 
         folder_path = "./splited"
         file_names = [f for f in os.listdir(folder_path) if f.endswith(".json")]
@@ -228,7 +227,7 @@ def merged_city():
         if not os.path.exists(target_folder):
             os.makedirs(target_folder)
 
-        result_list = chk_repeat(city_name , file_names)
+        result_list = chk_repeat(city_name, file_names)
 
         if len(result_list) != 0:
             file_name_output = os.path.join(target_folder, f"{city_name}.json")
@@ -236,7 +235,7 @@ def merged_city():
                 json.dump(result_list, output_file, indent=2, ensure_ascii=False)
 
 
-def chk_repeat_att(folder_path = "./merged", target_folder = "./chk_att"):
+def chk_repeat_att(folder_path="./merged", target_folder="./chk_att"):
     """
     檢查重複的景點
     """
@@ -245,16 +244,16 @@ def chk_repeat_att(folder_path = "./merged", target_folder = "./chk_att"):
     recurring_set = []
     recurring_list = []
 
-
     file_names = [f for f in os.listdir(folder_path) if f.endswith(".json")]
-
 
     if not os.path.exists(target_folder):
         os.makedirs(target_folder)
 
     for file_name in file_names:
         try:
-            with open(os.path.join(folder_path, file_name), "r", encoding="utf-8") as file:
+            with open(
+                os.path.join(folder_path, file_name), "r", encoding="utf-8"
+            ) as file:
                 data = json.load(file)
 
         except Exception as e:
@@ -309,7 +308,12 @@ def get_address(url):
         return None
 
 
-def correct_data(folder_path = "./chk_att", taiwan_json = "taiwan.json", url_file = "recurring_attraction_url.txt", target_folder = "./chk_att"):
+def correct_data(
+    folder_path="./chk_att",
+    taiwan_json="taiwan.json",
+    url_file="recurring_attraction_url.txt",
+    target_folder="./chk_att",
+):
     try:
         with open(
             os.path.join(folder_path, taiwan_json), "r", encoding="utf-8"
@@ -346,8 +350,7 @@ def correct_data(folder_path = "./chk_att", taiwan_json = "taiwan.json", url_fil
             json.dump(taiwan, output_file, indent=2, ensure_ascii=False)
 
 
-def del_lunar(file_names = "./chk_att/taiwan_correction.json", target_folder = "./clean"):
-    
+def del_lunar(file_names="./chk_att/taiwan_correction.json", target_folder="./clean"):
 
     target_folder = "./clean"
     if not os.path.exists(target_folder):
@@ -373,4 +376,3 @@ def del_lunar(file_names = "./chk_att/taiwan_correction.json", target_folder = "
         file_name_output = os.path.join(target_folder, f"{city_name}.json")
         with open(file_name_output, "w", encoding="utf-8") as output_file:
             json.dump(city_attraction_item, output_file, indent=2, ensure_ascii=False)
-

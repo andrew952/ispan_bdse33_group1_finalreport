@@ -373,8 +373,8 @@ def listening():
             pass
 
 
-if __name__ == "__main__":
-    switch = True
+def att_list(list_path="your_list.txt"):
+
     listening_thread = threading.Thread(target=listening)  # 建立listening執行緒
     listening_thread.start()  # 啟動執行緒
 
@@ -382,7 +382,7 @@ if __name__ == "__main__":
         driver = initialize_browser()
         processed_locations = set()  # 用集合來記錄已處理的地點
 
-        with open("your_list.txt", "r", encoding="utf-8") as clocation:
+        with open(list_path, "r", encoding="utf-8") as clocation:
             lines = clocation.readlines()
             for line in lines:
                 line = line.strip()  # 移除開頭和結尾的空白字符
@@ -410,7 +410,5 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:  # 捕獲按下 Ctrl+C 的異常
         print("Ctrl+C detected. Exiting...")
-        switch = False  # 結束迴圈
 
-    switch = False  # 爬蟲結束，結束迴圈
     listening_thread.join()  # 结束執行緒
